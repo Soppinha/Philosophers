@@ -1,35 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sopinha <sopinha@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/13 18:27:22 by svaladar          #+#    #+#             */
-/*   Updated: 2026/02/07 14:24:22 by sopinha          ###   ########.fr       */
+/*   Created: 2025/08/06 11:22:28 by svaladar          #+#    #+#             */
+/*   Updated: 2026/02/07 15:13:23 by sopinha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "../philo.h"
 
-int	main(int argc, char **argv)
+void	ft_putstr_fd(char *s, int fd)
 {
-	t_data	data;
-	t_philo	*philos;
-
-	philos = NULL;
-	if (parse_arguments(argc, argv, &data) == FALSE)
-		return (1);
-	if (init_data(&data, &philos) == FALSE)
-	{
-		cleanup(&data, philos);
-		return (1);
-	}
-	if (start_simulation(&data, philos) == FALSE)
-	{
-		cleanup(&data, philos);
-		return (1);
-	}
-	cleanup(&data, philos);
-	return (0);
+	if (!s)
+		return ;
+	write(fd, s, ft_strlen(s));
 }

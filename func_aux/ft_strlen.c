@@ -1,35 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sopinha <sopinha@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/13 18:27:22 by svaladar          #+#    #+#             */
-/*   Updated: 2026/02/07 14:24:22 by sopinha          ###   ########.fr       */
+/*   Created: 2025/07/15 15:21:40 by svaladar          #+#    #+#             */
+/*   Updated: 2026/02/07 15:13:27 by sopinha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "../philo.h"
 
-int	main(int argc, char **argv)
+size_t	ft_strlen(const char *s)
 {
-	t_data	data;
-	t_philo	*philos;
+	size_t	i;
 
-	philos = NULL;
-	if (parse_arguments(argc, argv, &data) == FALSE)
-		return (1);
-	if (init_data(&data, &philos) == FALSE)
-	{
-		cleanup(&data, philos);
-		return (1);
-	}
-	if (start_simulation(&data, philos) == FALSE)
-	{
-		cleanup(&data, philos);
-		return (1);
-	}
-	cleanup(&data, philos);
-	return (0);
+	i = 0;
+	while (s[i] != '\0')
+		i++;
+	return (i);
 }

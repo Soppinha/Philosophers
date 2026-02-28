@@ -1,35 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   one_philo.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sopinha <sopinha@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/13 18:27:22 by svaladar          #+#    #+#             */
-/*   Updated: 2026/02/07 14:24:22 by sopinha          ###   ########.fr       */
+/*   Created: 2026/02/27 02:59:17 by sopinha           #+#    #+#             */
+/*   Updated: 2026/02/28 19:33:59 by sopinha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	main(int argc, char **argv)
+void	*one_philo_routine(void *arg)
 {
-	t_data	data;
-	t_philo	*philos;
+	t_philo	*philo;
 
-	philos = NULL;
-	if (parse_arguments(argc, argv, &data) == FALSE)
-		return (1);
-	if (init_data(&data, &philos) == FALSE)
-	{
-		cleanup(&data, philos);
-		return (1);
-	}
-	if (start_simulation(&data, philos) == FALSE)
-	{
-		cleanup(&data, philos);
-		return (1);
-	}
-	cleanup(&data, philos);
-	return (0);
+	philo = (t_philo *)arg;
+	print_status(philo, FORK_TAKEN);
+	ft_usleep(philo->data->time_to_die);
+	return (NULL);
 }

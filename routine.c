@@ -1,35 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sopinha <sopinha@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/13 18:27:22 by svaladar          #+#    #+#             */
-/*   Updated: 2026/02/07 14:24:22 by sopinha          ###   ########.fr       */
+/*   Created: 2026/02/27 02:58:30 by sopinha           #+#    #+#             */
+/*   Updated: 2026/02/27 05:00:00 by sopinha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	main(int argc, char **argv)
+void	*philosopher_routine(void *arg)
 {
-	t_data	data;
-	t_philo	*philos;
+	t_philo	*philo;
 
-	philos = NULL;
-	if (parse_arguments(argc, argv, &data) == FALSE)
-		return (1);
-	if (init_data(&data, &philos) == FALSE)
+	philo = (t_philo *)arg;
+	if (philo->data->num_philos == 1)
+		return (one_philo_routine(arg));
+	if (philo->id % 2 == 0)
+		ft_usleep(philo->data->time_to_eat / 2);
+	while (!is_simulation_over(philo))
 	{
-		cleanup(&data, philos);
-		return (1);
+		philo_eat(philo);
+		if (is_simulation_over(philo))
+			break ;
+		philo_sleep(philo);
+		if (is_simulation_over(philo))
+			break ;
+		philo_think(philo);
 	}
-	if (start_simulation(&data, philos) == FALSE)
-	{
-		cleanup(&data, philos);
-		return (1);
-	}
-	cleanup(&data, philos);
-	return (0);
+	return (NULL);
 }

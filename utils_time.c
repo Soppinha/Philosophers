@@ -1,35 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   utils_time.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sopinha <sopinha@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/13 18:27:22 by svaladar          #+#    #+#             */
-/*   Updated: 2026/02/07 14:24:22 by sopinha          ###   ########.fr       */
+/*   Created: 2026/02/07 13:43:24 by sopinha           #+#    #+#             */
+/*   Updated: 2026/02/28 18:14:34 by sopinha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	main(int argc, char **argv)
+long	get_time(void)
 {
-	t_data	data;
-	t_philo	*philos;
+	struct timeval	tv;
 
-	philos = NULL;
-	if (parse_arguments(argc, argv, &data) == FALSE)
-		return (1);
-	if (init_data(&data, &philos) == FALSE)
-	{
-		cleanup(&data, philos);
-		return (1);
-	}
-	if (start_simulation(&data, philos) == FALSE)
-	{
-		cleanup(&data, philos);
-		return (1);
-	}
-	cleanup(&data, philos);
-	return (0);
+	if (gettimeofday(&tv, NULL) == -1)
+		return (error_time_msg(ERR_TIME));
+	return ((tv.tv_sec * 1000000L) + tv.tv_usec);
 }
