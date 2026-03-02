@@ -6,7 +6,7 @@
 /*   By: sopinha <sopinha@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:00:00 by sopinha           #+#    #+#             */
-/*   Updated: 2026/02/28 19:30:14 by sopinha          ###   ########.fr       */
+/*   Updated: 2026/03/02 18:30:52 by sopinha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,18 +22,24 @@ t_bool	is_simulation_over(t_philo *philo)
 	return (dead);
 }
 
-void	ft_usleep(long milliseconds)
+void ft_usleep(long milliseconds)
 {
-	long	start;
-	long	remaining;
+    long    start;
+    long    elapsed;
+    long    remaining;
 
-	start = get_time();
-	while ((get_time() - start) < milliseconds * 1000)
-	{
-		remaining = milliseconds * 1000 - (get_time() - start);
-		if (remaining > 1000)
-			usleep(500);
-		else
-			usleep(100);
-	}
+    start = get_time();
+    while (1)
+    {
+        elapsed = get_time() - start;
+        if (elapsed >= milliseconds * 1000)
+            break ;
+        remaining = milliseconds * 1000 - elapsed;
+        if (remaining > 5000)
+            usleep(remaining / 2);
+        else if (remaining > 1000)
+            usleep(500);
+        else
+            usleep(100);
+    }
 }
