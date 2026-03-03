@@ -6,7 +6,7 @@
 /*   By: sopinha <sopinha@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 18:32:32 by svaladar          #+#    #+#             */
-/*   Updated: 2026/02/28 18:36:46 by sopinha          ###   ########.fr       */
+/*   Updated: 2026/03/03 19:10:10 by sopinha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,30 +84,55 @@ typedef struct s_philo
 	t_data			*data;
 }	t_philo;
 
-int		error_input_msg(int option);
-int		error_init_msg(int option);
-int		error_time_msg(int option);
-int		validate_and_convert(char *arg, int *value, int err_code);
-int		validate_and_convert_long(char *arg, long *value, int err_code);
+/* error.c */
+int		print_input_error(int option);
+int		print_init_error(int option);
+int		print_time_error(int option);
+
+/* validate.c */
+int		parse_int_arg(char *arg, int *value, int err_code);
+int		parse_long_arg(char *arg, long *value, int err_code);
+
+/* input.c */
 int		parse_arguments(int argc, char **argv, t_data *data);
+
+/* utils.c */
 int		ft_atoi(const char *str);
 long	ft_unsigned_atol(const char *str);
 size_t	ft_strlen(const char *s);
 void	ft_putstr_fd(char *s, int fd);
 int		ft_isdigit(int c);
 int		ft_isspace(int c);
-t_bool	init_data(t_data *data, t_philo **philos);
-void	cleanup(t_data *data, t_philo *philos);
-long	get_time(void);
 t_bool	is_simulation_over(t_philo *philo);
 void	ft_usleep(long milliseconds);
+
+/* utils_time.c */
+long	get_time(void);
+
+/* init.c */
+t_bool	init_data(t_data *data, t_philo **philos);
+
+/* cleanup.c */
+void	cleanup(t_data *data, t_philo *philos);
+
+/* log.c */
 void	print_status(t_philo *philo, t_status status);
+
+/* action.c */
 void	philo_eat(t_philo *philo);
 void	philo_sleep(t_philo *philo);
 void	philo_think(t_philo *philo);
+
+/* routine.c */
 void	*philosopher_routine(void *arg);
+
+/* one_philo.c */
 void	*one_philo_routine(void *arg);
+
+/* monitor.c */
 void	*monitor_routine(void *arg);
+
+/* simulation.c */
 t_bool	start_simulation(t_data *data, t_philo *philos);
 
 #endif

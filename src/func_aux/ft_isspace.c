@@ -1,23 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_isspace.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sopinha <sopinha@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/15 15:21:40 by svaladar          #+#    #+#             */
-/*   Updated: 2026/02/07 15:13:27 by sopinha          ###   ########.fr       */
+/*   Created: 2026/02/07 12:14:54 by sopinha           #+#    #+#             */
+/*   Updated: 2026/03/03 19:50:12 by sopinha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../philo.h"
+#include "philo.h"
 
-size_t	ft_strlen(const char *s)
+int	ft_isspace(int c)
 {
-	size_t	i;
-
-	i = 0;
-	while (s[i] != '\0')
-		i++;
-	return (i);
+	return (c == ' ' || c == '\t' || c == '\n'
+		|| c == '\v' || c == '\f' || c == '\r');
 }

@@ -1,19 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isspace.c                                       :+:      :+:    :+:   */
+/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sopinha <sopinha@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/07 12:14:54 by sopinha           #+#    #+#             */
-/*   Updated: 2026/02/27 05:09:12 by sopinha          ###   ########.fr       */
+/*   Created: 2025/08/06 11:22:28 by svaladar          #+#    #+#             */
+/*   Updated: 2026/03/03 19:50:15 by sopinha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../philo.h"
+#include "philo.h"
 
-int	ft_isspace(int c)
+void	ft_putstr_fd(char *s, int fd)
 {
-	return (c == ' ' || c == '\t' || c == '\n'
-		|| c == '\v' || c == '\f' || c == '\r');
+	if (!s)
+		return ;
+	write(fd, s, ft_strlen(s));
 }

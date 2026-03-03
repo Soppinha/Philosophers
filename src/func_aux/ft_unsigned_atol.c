@@ -6,11 +6,11 @@
 /*   By: sopinha <sopinha@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 17:46:13 by sopinha           #+#    #+#             */
-/*   Updated: 2026/02/07 15:13:31 by sopinha          ###   ########.fr       */
+/*   Updated: 2026/03/03 19:50:21 by sopinha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../philo.h"
+#include "philo.h"
 
 long	ft_unsigned_atol(const char *str)
 {

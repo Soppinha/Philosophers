@@ -6,15 +6,14 @@
 #    By: sopinha <sopinha@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/07 18:00:00 by sopinha           #+#    #+#              #
-#    Updated: 2026/02/28 18:41:31 by sopinha          ###   ########.fr        #
+#    Updated: 2026/03/03 19:55:08 by sopinha          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		=	philo
 
 CC			=	cc
-CFLAGS		=	-Wall -Wextra -Werror -pthread
-DFLAGS		=	-g -fsanitize=thread
+CFLAGS		=	-Wall -Wextra -Werror -pthread -I include
 RM			=	rm -rf
 
 GREEN		=	\033[0;32m
@@ -22,82 +21,70 @@ RED			=	\033[0;31m
 YELLOW		=	\033[0;33m
 RESET		=	\033[0m
 
-SRC_DIR		=	.
+SRC_DIR		=	src
 OBJ_DIR		=	obj
-FUNC_DIR	=	func_aux
+FUNC_DIR	=	$(SRC_DIR)/func_aux
+
+HEADER		=	include/philo.h
 
 SRCS		=	main.c \
-				input.c \
-				validate.c \
-				init.c \
-				cleanup.c \
-				error.c \
-				simulation.c \
-				action.c \
-				one_philo.c \
-				routine.c \
-				monitor.c \
-				log.c \
-				utils.c \
-				utils_time.c
-
-FUNC_SRCS	=	$(FUNC_DIR)/ft_isdigit.c \
+				$(SRC_DIR)/input.c \
+				$(SRC_DIR)/validate.c \
+				$(SRC_DIR)/init.c \
+				$(SRC_DIR)/cleanup.c \
+				$(SRC_DIR)/error.c \
+				$(SRC_DIR)/simulation.c \
+				$(SRC_DIR)/action.c \
+				$(SRC_DIR)/one_philo.c \
+				$(SRC_DIR)/routine.c \
+				$(SRC_DIR)/monitor.c \
+				$(SRC_DIR)/log.c \
+				$(SRC_DIR)/utils.c \
+				$(SRC_DIR)/utils_time.c \
+				$(FUNC_DIR)/ft_isdigit.c \
 				$(FUNC_DIR)/ft_isspace.c \
 				$(FUNC_DIR)/ft_putstr_fd.c \
 				$(FUNC_DIR)/ft_strlen.c \
 				$(FUNC_DIR)/ft_unsigned_atol.c
 
-ALL_SRCS	=	$(SRCS) $(FUNC_SRCS)
-
 OBJS		=	$(SRCS:%.c=$(OBJ_DIR)/%.o)
-FUNC_OBJS	=	$(FUNC_SRCS:$(FUNC_DIR)/%.c=$(OBJ_DIR)/%.o)
-ALL_OBJS	=	$(OBJS) $(FUNC_OBJS)
-
-HEADER		=	philo.h
 
 all: $(NAME)
 
-$(OBJ_DIR):
-	@mkdir -p $(OBJ_DIR)
-	@echo "$(YELLOW)Creating object directory...$(RESET)"
-
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(HEADER) | $(OBJ_DIR)
+$(OBJ_DIR)/%.o: %.c $(HEADER)
+	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) -c $< -o $@
-	@echo "$(GREEN)✓$(RESET) Compiled: $<"
 
-$(OBJ_DIR)/%.o: $(FUNC_DIR)/%.c $(HEADER) | $(OBJ_DIR)
-	@$(CC) $(CFLAGS) -c $< -o $@
-	@echo "$(GREEN)✓$(RESET) Compiled: $<"
-
-$(NAME): $(ALL_OBJS)
-	@$(CC) $(CFLAGS) $(ALL_OBJS) -o $(NAME)
-	@echo "$(GREEN)━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━$(RESET)"
-	@echo "$(GREEN)✓ $(NAME) compiled successfully!$(RESET)"
-	@echo "$(GREEN)━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━$(RESET)"
+$(NAME): $(OBJS)
+	@$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
+	@printf "$(GREEN)━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━$(RESET)\n"
+	@printf "$(GREEN)✓ $(NAME) compiled successfully!$(RESET)\n"
+	@printf "$(GREEN)━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━$(RESET)\n"
 
 clean:
 	@$(RM) $(OBJ_DIR)
-	@echo "$(RED)✗ Object files removed$(RESET)"
+	@printf "$(RED)✗ Object files removed$(RESET)\n"
 
 fclean: clean
 	@$(RM) $(NAME)
-	@echo "$(RED)✗ $(NAME) removed$(RESET)"
+	@printf "$(RED)✗ $(NAME) removed$(RESET)\n"
 
 re: fclean all
 
-debug: CFLAGS += $(DFLAGS)
-debug: fclean $(NAME)
-	@echo "$(YELLOW)⚠ Debug build with thread sanitizer enabled$(RESET)"
+drd: $(NAME)
+	@printf "$(YELLOW)Running DRD (thread error detector)...$(RESET)\n"
+	valgrind --tool=drd --log-file=drd.log ./$(NAME) 5 800 200 200 4
+	@printf "$(GREEN)✓ Check drd.log for results$(RESET)\n"
 
 helgrind: $(NAME)
-	@echo "$(YELLOW)Running Helgrind (thread error detector)...$(RESET)"
-	valgrind --tool=helgrind --log-file=helgrind.log ./$(NAME) 5 800 200 200
-	@echo "$(GREEN)✓ Check helgrind.log for results$(RESET)"
+	@printf "$(YELLOW)Running Helgrind (thread error detector)...$(RESET)\n"
+	valgrind --tool=helgrind --log-file=helgrind.log ./$(NAME) 5 800 200 200 4
+	@printf "$(GREEN)✓ Check helgrind.log for results$(RESET)\n"
 
 valgrind: $(NAME)
-	@echo "$(YELLOW)Running Valgrind (memory leak detector)...$(RESET)"
+	@printf "$(YELLOW)Running Valgrind (memory leak detector)...$(RESET)\n"
 	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes \
 		--log-file=valgrind.log ./$(NAME) 5 800 200 200 7
-	@echo "$(GREEN)✓ Check valgrind.log for results$(RESET)"
+	@printf "$(GREEN)✓ Check valgrind.log for results$(RESET)\n"
 
-.PHONY: all clean fclean re debug helgrind valgrind
+.PHONY: all clean fclean re drd helgrind valgrind

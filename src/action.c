@@ -6,7 +6,7 @@
 /*   By: sopinha <sopinha@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:58:53 by sopinha           #+#    #+#             */
-/*   Updated: 2026/03/03 16:57:08 by sopinha          ###   ########.fr       */
+/*   Updated: 2026/03/03 19:57:33 by sopinha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,12 @@ static int	take_forks(t_philo *philo, t_fork **first, t_fork **second)
 {
 	if (philo->left_fork->id < philo->right_fork->id)
 	{
-		*first  = philo->left_fork;
+		*first = philo->left_fork;
 		*second = philo->right_fork;
 	}
 	else
 	{
-		*first  = philo->right_fork;
+		*first = philo->right_fork;
 		*second = philo->left_fork;
 	}
 	pthread_mutex_lock(&(*first)->mutex);

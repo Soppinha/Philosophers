@@ -6,11 +6,11 @@
 /*   By: sopinha <sopinha@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 18:27:22 by svaladar          #+#    #+#             */
-/*   Updated: 2026/02/07 14:24:22 by sopinha          ###   ########.fr       */
+/*   Updated: 2026/03/03 19:45:13 by sopinha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "include/philo.h"
 
 int	main(int argc, char **argv)
 {

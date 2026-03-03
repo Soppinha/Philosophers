@@ -1,35 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   routine.c                                          :+:      :+:    :+:   */
+/*   utils_time.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sopinha <sopinha@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/27 02:58:30 by sopinha           #+#    #+#             */
-/*   Updated: 2026/03/02 19:19:35 by sopinha          ###   ########.fr       */
+/*   Created: 2026/02/07 13:43:24 by sopinha           #+#    #+#             */
+/*   Updated: 2026/03/03 19:12:48 by sopinha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	*philosopher_routine(void *arg)
+long	get_time(void)
 {
-	t_philo	*philo;
+	struct timeval	tv;
 
-	philo = (t_philo *)arg;
-	if (philo->data->num_philos == 1)
-		return (one_philo_routine(arg));
-	if (philo->id % 2 == 0)
-		ft_usleep(philo->data->time_to_eat / 2);
-	while (!is_simulation_over(philo))
-	{
-		philo_think(philo);
-		if (is_simulation_over(philo))
-			break ;
-		philo_eat(philo);
-		if (is_simulation_over(philo))
-			break ;
-		philo_sleep(philo);
-	}
-	return (NULL);
+	if (gettimeofday(&tv, NULL) == -1)
+		return (print_time_error(ERR_TIME));
+	return ((tv.tv_sec * 1000000L) + tv.tv_usec);
 }

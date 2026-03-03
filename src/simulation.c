@@ -6,7 +6,7 @@
 /*   By: sopinha <sopinha@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 14:17:41 by sopinha           #+#    #+#             */
-/*   Updated: 2026/03/03 15:57:17 by sopinha          ###   ########.fr       */
+/*   Updated: 2026/03/03 19:12:55 by sopinha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@ static t_bool	create_threads(t_philo *philos, pthread_t *monitor)
 	{
 		if (pthread_create(&philos[i].thread, NULL,
 				philosopher_routine, &philos[i]) != 0)
-			return (error_init_msg(ERR_THREAD));
+			return (print_init_error(ERR_THREAD));
 		i++;
 	}
 	if (pthread_create(monitor, NULL, monitor_routine, philos) != 0)
-		return (error_init_msg(ERR_THREAD));
+		return (print_init_error(ERR_THREAD));
 	return (TRUE);
 }
 

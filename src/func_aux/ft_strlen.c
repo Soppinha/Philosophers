@@ -1,20 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sopinha <sopinha@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/06 11:22:28 by svaladar          #+#    #+#             */
-/*   Updated: 2026/02/07 15:13:23 by sopinha          ###   ########.fr       */
+/*   Created: 2025/07/15 15:21:40 by svaladar          #+#    #+#             */
+/*   Updated: 2026/03/03 19:50:17 by sopinha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../philo.h"
+#include "philo.h"
 
-void	ft_putstr_fd(char *s, int fd)
+size_t	ft_strlen(const char *s)
 {
-	if (!s)
-		return ;
-	write(fd, s, ft_strlen(s));
+	size_t	i;
+
+	i = 0;
+	while (s[i] != '\0')
+		i++;
+	return (i);
 }

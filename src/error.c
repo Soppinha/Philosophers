@@ -6,7 +6,7 @@
 /*   By: sopinha <sopinha@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 20:40:46 by svaladar          #+#    #+#             */
-/*   Updated: 2026/02/27 04:21:58 by sopinha          ###   ########.fr       */
+/*   Updated: 2026/03/03 19:10:55 by sopinha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static void	print_usage(void)
 	ft_putstr_fd("[number_of_times_each_philosopher_must_eat]\n", 2);
 }
 
-int	error_input_msg(int option)
+int	print_input_error(int option)
 {
 	if (option == ERR_ARGS)
 	{
@@ -41,7 +41,7 @@ int	error_input_msg(int option)
 	return (FALSE);
 }
 
-int	error_init_msg(int option)
+int	print_init_error(int option)
 {
 	if (option == ERR_MALLOC)
 		ft_putstr_fd("Error: memory allocation failed\n", 2);
@@ -52,7 +52,7 @@ int	error_init_msg(int option)
 	return (FALSE);
 }
 
-int	error_time_msg(int option)
+int	print_time_error(int option)
 {
 	if (option == ERR_TIME)
 		ft_putstr_fd("Error: time retrieval failed\n", 2);

@@ -6,11 +6,11 @@
 /*   By: sopinha <sopinha@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 17:47:08 by sopinha           #+#    #+#             */
-/*   Updated: 2026/02/07 15:13:10 by sopinha          ###   ########.fr       */
+/*   Updated: 2026/03/03 19:40:59 by sopinha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../philo.h"
+#include "philo.h"
 
 int	ft_isdigit(int c)
 {
