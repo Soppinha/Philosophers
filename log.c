@@ -6,7 +6,7 @@
 /*   By: sopinha <sopinha@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:49:20 by sopinha           #+#    #+#             */
-/*   Updated: 2026/02/28 18:15:01 by sopinha          ###   ########.fr       */
+/*   Updated: 2026/03/03 16:05:20 by sopinha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,15 @@ static void	print_status_msg(t_philo *philo, t_status status)
 
 void	print_status(t_philo *philo, t_status status)
 {
-	pthread_mutex_lock(&philo->data->write_lock);
-	if (!is_simulation_over(philo) || status == DEAD)
+	t_bool	dead;
+
+	pthread_mutex_lock(&philo->data->dead_lock);
+	dead = philo->data->dead;
+	pthread_mutex_unlock(&philo->data->dead_lock);
+	if (!dead || status == DEAD)
+	{
+		pthread_mutex_lock(&philo->data->write_lock);
 		print_status_msg(philo, status);
-	pthread_mutex_unlock(&philo->data->write_lock);
+		pthread_mutex_unlock(&philo->data->write_lock);
+	}
 }

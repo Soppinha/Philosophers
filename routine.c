@@ -6,7 +6,7 @@
 /*   By: sopinha <sopinha@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 02:58:30 by sopinha           #+#    #+#             */
-/*   Updated: 2026/02/27 05:00:00 by sopinha          ###   ########.fr       */
+/*   Updated: 2026/03/02 19:19:35 by sopinha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,13 @@ void	*philosopher_routine(void *arg)
 		ft_usleep(philo->data->time_to_eat / 2);
 	while (!is_simulation_over(philo))
 	{
+		philo_think(philo);
+		if (is_simulation_over(philo))
+			break ;
 		philo_eat(philo);
 		if (is_simulation_over(philo))
 			break ;
 		philo_sleep(philo);
-		if (is_simulation_over(philo))
-			break ;
-		philo_think(philo);
 	}
 	return (NULL);
 }

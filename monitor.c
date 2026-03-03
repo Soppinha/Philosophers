@@ -6,7 +6,7 @@
 /*   By: sopinha <sopinha@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 14:15:02 by sopinha           #+#    #+#             */
-/*   Updated: 2026/02/28 19:44:10 by sopinha          ###   ########.fr       */
+/*   Updated: 2026/03/03 16:05:10 by sopinha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,12 @@ static t_bool	check_philosopher_death(t_philo *philo)
 	long	time_since_meal;
 
 	pthread_mutex_lock(&philo->meal_mutex);
+	if (philo->data->num_must_eat != -1
+		&& philo->meals_eaten >= philo->data->num_must_eat)
+	{
+		pthread_mutex_unlock(&philo->meal_mutex);
+		return (FALSE);
+	}
 	time_since_meal = get_time() - philo->last_meal_time;
 	if (time_since_meal > philo->data->time_to_die * 1000)
 	{
@@ -39,26 +45,23 @@ static t_bool	check_philosopher_death(t_philo *philo)
 static t_bool	check_all_ate_enough(t_philo *philos, t_data *data)
 {
 	int	i;
-	int	finished_eating;
 
 	if (data->num_must_eat == -1)
 		return (FALSE);
 	i = 0;
-	finished_eating = 0;
 	while (i < data->num_philos)
 	{
 		pthread_mutex_lock(&philos[i].meal_mutex);
-		if (philos[i].meals_eaten >= data->num_must_eat)
-			finished_eating++;
+		if (philos[i].meals_eaten < data->num_must_eat)
+		{
+			pthread_mutex_unlock(&philos[i].meal_mutex);
+			return (FALSE);
+		}
 		pthread_mutex_unlock(&philos[i].meal_mutex);
 		i++;
 	}
-	if (finished_eating == data->num_philos)
-	{
-		set_dead_flag(data);
-		return (TRUE);
-	}
-	return (FALSE);
+	set_dead_flag(data);
+	return (TRUE);
 }
 
 void	*monitor_routine(void *arg)
