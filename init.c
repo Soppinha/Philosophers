@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wedos-sa <wedos-sa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sopinha <sopinha@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 11:02:41 by wedos-sa          #+#    #+#             */
-/*   Updated: 2025/12/19 11:46:56 by wedos-sa         ###   ########.fr       */
+/*   Updated: 2026/03/04 00:07:35 by sopinha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,28 +71,28 @@ static void	init_rules(t_rules *rules, int flag, char **argv)
 	}
 }
 
-static void	error_free(t_mutex *mutex)
+static int	error_free(t_mutex *mutex)
 {
 	free(mutex);
-	exit(EXIT_FAILURE);
+	return (0);
 }
 
 /*
 ** Allocates the mutex block and the fork array, initializes every fork,
 ** then builds the circular philosopher list.
 */
-void	init_philo(t_rules *rules, char **argv, t_node **nodes)
+int	init_philo(t_rules *rules, char **argv, t_node **nodes)
 {
 	t_p	p;
 
 	init_rules(rules, 1, argv);
 	p.mutex = malloc(sizeof(t_mutex));
 	if (!p.mutex)
-		exit(EXIT_FAILURE);
+		return (0);
 	rules->ph_quantity = ft_atoi(argv[1]);
 	p.mutex->hashi = malloc(sizeof(pthread_mutex_t) * rules->ph_quantity);
 	if (!p.mutex->hashi)
-		error_free(p.mutex);
+		return (error_free(p.mutex));
 	init_rules(rules, 2, argv);
 	p.hashi_index = 0;
 	while (p.hashi_index < rules->ph_quantity)
@@ -108,6 +108,7 @@ void	init_philo(t_rules *rules, char **argv, t_node **nodes)
 		append_item(nodes, p.philosopher_index, rules, p.mutex);
 		p.philosopher_index++;
 	}
+	return (1);
 }
 
 /*

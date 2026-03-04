@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wedos-sa <wedos-sa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sopinha <sopinha@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 11:03:10 by wedos-sa          #+#    #+#             */
-/*   Updated: 2025/12/19 14:20:57 by wedos-sa         ###   ########.fr       */
+/*   Updated: 2026/03/04 00:07:29 by sopinha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-static void	err(const char *msg)
+static int	err(const char *msg)
 {
 	while (*msg)
 		write(2, msg++, 1);
-	exit(EXIT_FAILURE);
+	return (0);
 }
 
 static int	ft_strlen_local(const char *s)
@@ -57,6 +57,7 @@ static int	is_overflow(const char *s)
 /*
 ** Rejects empty strings and any argument that contains a non-digit character.
 ** This catches '-', '+', letters and any other symbol including '-5'.
+** Returns 1 on valid input, 0 on error.
 */
 int	valid_input(char **argv)
 {
@@ -67,35 +68,37 @@ int	valid_input(char **argv)
 	while (argv[i])
 	{
 		if (argv[i][0] == '\0')
-			err("ERROR: Empty argument.\n");
+			return (err("ERROR: Invalid argument: empty string.\n"));
 		j = 0;
 		while (argv[i][j])
 		{
 			if (argv[i][j] < '0' || argv[i][j] > '9')
-				err("ERROR: Only digits are accepted.\n");
+				return (err("ERROR: Invalid argument: only digits accepted.\n"));
 			j++;
 		}
 		if (is_overflow(argv[i]))
-			err("ERROR: Value out of range.\n");
+			return (err("ERROR: Invalid argument: value out of range.\n"));
 		i++;
 	}
 	return (1);
 }
 
-void	print_error(char **argv)
+static int	print_error(char **argv)
 {
 	if (ft_atoi(argv[1]) < 1)
-		err("ERROR: Minimum 1 philosopher.\n");
-	err("ERROR: Try: ./philo 5 800 200 200\n");
+		return (err("ERROR: Invalid number of philosophers (minimum 1).\n"));
+	return (err("ERROR: Invalid arguments. Try: ./philo 5 800 200 200\n"));
 }
 
-void	init_check(int argc, char **argv)
+int	init_check(int argc, char **argv)
 {
 	if (argc < 5 || argc > 6)
-		err("ERROR: Philosophers need 4 or 5 arguments.\n");
-	valid_input(argv);
+		return (err("ERROR: Invalid number of arguments (need 4 or 5).\n"));
+	if (!valid_input(argv))
+		return (0);
 	if (ft_atoi(argv[1]) < 1)
-		print_error(argv);
+		return (print_error(argv));
 	if (argc == 6 && ft_atoi(argv[5]) < 1)
-		err("ERROR: Minimum 1 meal.\n");
+		return (err("ERROR: Invalid number of meals (minimum 1).\n"));
+	return (1);
 }

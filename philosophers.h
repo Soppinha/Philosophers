@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wedos-sa <wedos-sa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sopinha <sopinha@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 11:03:24 by wedos-sa          #+#    #+#             */
-/*   Updated: 2025/12/19 14:15:06 by wedos-sa         ###   ########.fr       */
+/*   Updated: 2026/03/04 00:07:22 by sopinha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,13 +93,12 @@ void	destroy_mutexes(t_node *nodes);
 
 /* ─── parser.c ───────────────────────────────────────────────────────────── */
 
-void	init_check(int argc, char **argv);
+int		init_check(int argc, char **argv);
 int		valid_input(char **argv);
-void	print_error(char **argv);
 
 /* ─── init.c ─────────────────────────────────────────────────────────────── */
 
-void	init_philo(t_rules *rules, char **argv, t_node **nodes);
+int		init_philo(t_rules *rules, char **argv, t_node **nodes);
 void	init_main(t_node *nodes);
 void	init_timers(t_main *p);
 void	threads_and_mutexes(t_node **nodes);
