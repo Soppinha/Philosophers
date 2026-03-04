@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philosophers.h                                     :+:      :+:    :+:   */
+/*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wedos-sa <wedos-sa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sofia <sofia@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 11:03:24 by wedos-sa          #+#    #+#             */
-/*   Updated: 2025/12/19 14:15:06 by wedos-sa         ###   ########.fr       */
+/*   Updated: 2026/03/04 17:02:46 by sofia            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILOSOPHERS_H
-# define PHILOSOPHERS_H
+#ifndef PHILO_H
+# define PHILO_H
 
 # include <stdio.h>
 # include <unistd.h>
@@ -19,7 +19,22 @@
 # include <stdlib.h>
 # include <sys/time.h>
 
-/* ─── Structures ──────────────────────────────────────────────────────────── */
+typedef enum e_error
+{
+	ERR_ARGS,
+	ERR_NUM_PHILO,
+	ERR_EMPTY,
+	ERR_DIGIT,
+	ERR_OVERFLOW,
+	ERR_MEALS,
+	ERR_MALLOC
+}	t_error;
+
+typedef enum e_bool
+{
+	FALSE,
+	TRUE
+}	t_bool;
 
 typedef struct s_mutex
 {
@@ -84,6 +99,11 @@ typedef struct s_free
 	int		total_nodes;
 }	t_free;
 
+/* ─── error.c ────────────────────────────────────────────────────────────── */
+
+int		print_input_error(int option);
+int		print_init_error(int option);
+
 /* ─── main.c ─────────────────────────────────────────────────────────────── */
 
 long	get_time(void);
@@ -93,13 +113,12 @@ void	destroy_mutexes(t_node *nodes);
 
 /* ─── parser.c ───────────────────────────────────────────────────────────── */
 
-void	init_check(int argc, char **argv);
+int		init_check(int argc, char **argv);
 int		valid_input(char **argv);
-void	print_error(char **argv);
 
 /* ─── init.c ─────────────────────────────────────────────────────────────── */
 
-void	init_philo(t_rules *rules, char **argv, t_node **nodes);
+int		init_philo(t_rules *rules, char **argv, t_node **nodes);
 void	init_main(t_node *nodes);
 void	init_timers(t_main *p);
 void	threads_and_mutexes(t_node **nodes);
@@ -115,19 +134,32 @@ int		list_size(t_node *begin_list);
 
 void	*routine(void *ptr);
 void	routine_while(t_node *node);
+void	eating(t_node *ptr);
+void	sleeping(t_node *ptr);
+void	thinking(t_node *ptr);
+
+/* ─── one_filo.c ─────────────────────────────────────────────────────────── */
+
 void	one_philosopher(t_node *node);
-void	eat(t_node *ptr);
-void	philosophers_sleep(t_node *ptr);
-void	think(t_node *ptr);
+
+/* ─── threads.c ──────────────────────────────────────────────────────────── */
+
+void	threads_and_mutexes(t_node **nodes);
 
 /* ─── forks.c ────────────────────────────────────────────────────────────── */
 
-int		take_hashis(t_node *ptr);
-void	put_hashis(t_node *ptr);
-int		take_right_hashi(t_node *ptr);
-int		take_left_hashi(t_node *ptr);
-void	print_fork_left(t_node *ptr);
-void	print_fork_right(t_node *ptr);
+int		take_fork(t_node *ptr);
+void	put_fork(t_node *ptr);
+int		take_right_fork(t_node *ptr);
+int		take_left_fork(t_node *ptr);
+
+/* ─── log.c ────────────────────────────────────────────────────────────── */
+
+void	print_take_fork(t_node *ptr);
+void	print_eating(t_node *ptr);
+void	print_sleeping(t_node *ptr);
+void	print_thinking(t_node *ptr);
+void	print_dead(t_node *ptr);
 
 /* ─── monitor.c ──────────────────────────────────────────────────────────── */
 
@@ -141,5 +173,6 @@ void	philo_eat_print(t_node *ptr, t_node *temp);
 int		ft_atoi(const char *string);
 void	free_list(t_node **begin_list);
 int		is_dead(t_node *ptr);
+void	wait_start(t_node *node);
 
 #endif

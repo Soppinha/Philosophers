@@ -3,29 +3,35 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: wedos-sa <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: sofia <sofia@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/12/02 15:50:50 by wedos-sa          #+#    #+#              #
-#    Updated: 2025/12/19 11:46:56 by wedos-sa         ###   ########.fr        #
+#    Created: 2026/03/04 16:50:45 by sofia             #+#    #+#              #
+#    Updated: 2026/03/04 17:08:19 by sofia            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME		= philo
+NAME		=	philo
 
-CC			= cc
-CFLAGS		= -g -Wall -Wextra -Werror
-LDFLAGS		= -lpthread
+CC			=	cc
+CFLAGS		=	-g -Wall -Wextra -Werror
+LDFLAGS		=	-lpthread
+SRC_DIR		=	src
+OBJ_DIR		=	obj
+HEADER		=	include/philo.h
 
-SRCS		= main.c		\
-			  parser.c		\
-			  init.c		\
-			  list.c		\
-			  routine.c		\
-			  forks.c		\
-			  monitor.c		\
-			  utils.c
+SRCS		= $(SRC_DIR)/main.c			\
+			  $(SRC_DIR)/error.c		\
+			  $(SRC_DIR)/parser.c		\
+			  $(SRC_DIR)/init.c			\
+			  $(SRC_DIR)/list.c			\
+			  $(SRC_DIR)/routine.c		\
+			  $(SRC_DIR)/forks.c		\
+			  $(SRC_DIR)/monitor.c		\
+			  $(SRC_DIR)/log.c			\
+			  $(SRC_DIR)/one_philo.c	\
+			  $(SRC_DIR)/utils.c
 
-OBJS		= $(SRCS:.c=.o)
+OBJS		= $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS))
 
 # ************************* COLORS & SILENCE ************************* #
 
@@ -44,14 +50,15 @@ $(NAME): $(OBJS)
 	$(SILENT)echo "$(GREEN)[PHILO]$(RESET) Compilado"
 	$(SILENT)$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LDFLAGS)
 
-%.o: %.c philosophers.h
-	$(SILENT)$(CC) $(CFLAGS) -c $< -o $@
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(HEADER)
+	$(SILENT)mkdir -p $(dir $@)
+	$(SILENT)$(CC) $(CFLAGS) -Iinclude -c $< -o $@
 
 # ***************************** CLEANING ***************************** #
 
 clean:
 	$(SILENT)echo "$(RED)[CLEAN]$(RESET) Removidos: objetos do projeto"
-	$(SILENT)rm -f $(OBJS)
+	$(SILENT)rm -rf $(OBJ_DIR)
 
 fclean: clean
 	$(SILENT)echo "$(RED)[FCLEAN]$(RESET) Removidos: objetos e binário"

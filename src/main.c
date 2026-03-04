@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philosophers.h"
+#include "philo.h"
 
 long	get_time(void)
 {
@@ -86,8 +86,10 @@ int	main(int argc, char **argv)
 {
 	t_main	p;
 
-	init_check(argc, argv);
-	init_philo(&p.rules, argv, &p.nodes);
+	if (!init_check(argc, argv))
+		return (1);
+	if (!init_philo(&p.rules, argv, &p.nodes))
+		return (1);
 	init_main(p.nodes);
 	init_timers(&p);
 	threads_and_mutexes(&p.nodes);

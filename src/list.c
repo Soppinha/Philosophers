@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philosophers.h"
+ #include "philo.h"
 
 t_node	*create_elem(int philosopher_number, t_rules *rules, t_mutex *mutex)
 {

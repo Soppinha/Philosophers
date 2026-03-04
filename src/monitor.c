@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   monitor.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wedos-sa <wedos-sa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sofia <sofia@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 11:03:04 by wedos-sa          #+#    #+#             */
-/*   Updated: 2025/12/20 11:28:18 by wedos-sa         ###   ########.fr       */
+/*   Updated: 2026/03/04 16:48:59 by sofia            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philosophers.h"
-
-/* ─── Reporting ───────────────────────────────────────────────────────────── */
+#include "philo.h"
 
 void	philo_eat_print(t_node *ptr, t_node *temp)
 {
@@ -34,20 +32,6 @@ void	philo_eat_print(t_node *ptr, t_node *temp)
 	pthread_mutex_unlock(&ptr->mutex->write_lock);
 }
 
-static void	print_dead(t_node *ptr)
-{
-	pthread_mutex_lock(&ptr->mutex->write_lock);
-	printf(" %ld | philosopher %d dead ☠️\n",
-		get_time() - ptr->rules->real_time, ptr->number);
-	pthread_mutex_unlock(&ptr->mutex->write_lock);
-}
-
-/* ─── Meal saturation check ───────────────────────────────────────────────── */
-
-/*
-** Walks the full circle once. If every philosopher has reached max_meals,
-** prints the summary and sets the dead flag to end the simulation.
-*/
 void	eat_monitor(t_node *ptr)
 {
 	t_node	*begin_list;
@@ -74,14 +58,6 @@ void	eat_monitor(t_node *ptr)
 	pthread_mutex_unlock(&ptr->mutex->dead);
 }
 
-/* ─── Per-iteration monitor pass ──────────────────────────────────────────── */
-
-/*
-** Checks each philosopher in one pass:
-** - If max_meals is set, verifies the saturation condition first.
-** - Then checks whether time_to_die has elapsed since the last meal.
-** Returns NULL if the simulation must stop, (void *)1 otherwise.
-*/
 void	*monitor_looping(t_node *ptr, t_node *begin_list)
 {
 	while (ptr && ptr->next != begin_list)
@@ -109,8 +85,6 @@ void	*monitor_looping(t_node *ptr, t_node *begin_list)
 	}
 	return ((void *)1);
 }
-
-/* ─── Monitor thread ──────────────────────────────────────────────────────── */
 
 void	*monitor(void *head)
 {

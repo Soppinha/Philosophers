@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wedos-sa <wedos-sa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sofia <sofia@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 11:03:43 by wedos-sa          #+#    #+#             */
-/*   Updated: 2025/12/19 14:03:13 by wedos-sa         ###   ########.fr       */
+/*   Updated: 2026/03/04 17:00:54 by sofia            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philosophers.h"
+#include "philo.h"
 
 int	ft_atoi(const char *string)
 {
@@ -48,10 +48,16 @@ int	is_dead(t_node *ptr)
 	return (dead);
 }
 
-/*
-** Frees the mutex block (shared by all nodes) using the first node,
-** then iterates the rest of the circle freeing each node individually.
-*/
+void	wait_start(t_node *node)
+{
+	while (1)
+	{
+		if (node->rules->start_time != 0)
+			break ;
+		usleep(50);
+	}
+}
+
 void	free_list(t_node **begin_list)
 {
 	t_free	p;

@@ -3,19 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wedos-sa <wedos-sa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sofia <sofia@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/19 11:02:41 by wedos-sa          #+#    #+#             */
-/*   Updated: 2025/12/19 11:46:56 by wedos-sa         ###   ########.fr       */
+/*   Created: 2026/03/04 16:51:14 by sofia             #+#    #+#             */
+/*   Updated: 2026/03/04 17:08:31 by sofia            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philosophers.h"
+#include "philo.h"
 
-/*
-** Initializes the shared mutexes (meal, max_meal, time, write, dead).
-** Called once before threads are launched.
-*/
 void	init_main(t_node *nodes)
 {
 	pthread_mutex_init(&nodes->mutex->meal_lock, NULL);
@@ -25,10 +21,6 @@ void	init_main(t_node *nodes)
 	pthread_mutex_init(&nodes->mutex->dead, NULL);
 }
 
-/*
-** Records the simulation start time and sets every philosopher's
-** last_meal timestamp and meal counter to their initial values.
-*/
 void	init_timers(t_main *p)
 {
 	p->start = get_time();
@@ -47,10 +39,6 @@ void	init_timers(t_main *p)
 	}
 }
 
-/*
-** Fills the rules struct with the simulation parameters from argv.
-** flag == 1 → reset dead/start_time; flag == 2 → parse timing values.
-*/
 static void	init_rules(t_rules *rules, int flag, char **argv)
 {
 	if (flag == 1)
@@ -71,28 +59,26 @@ static void	init_rules(t_rules *rules, int flag, char **argv)
 	}
 }
 
-static void	error_free(t_mutex *mutex)
+static void	free_mutex(t_mutex *mutex)
 {
 	free(mutex);
-	exit(EXIT_FAILURE);
 }
 
-/*
-** Allocates the mutex block and the fork array, initializes every fork,
-** then builds the circular philosopher list.
-*/
-void	init_philo(t_rules *rules, char **argv, t_node **nodes)
+int	init_philo(t_rules *rules, char **argv, t_node **nodes)
 {
 	t_p	p;
 
 	init_rules(rules, 1, argv);
 	p.mutex = malloc(sizeof(t_mutex));
 	if (!p.mutex)
-		exit(EXIT_FAILURE);
+		return (print_init_error(ERR_MALLOC));
 	rules->ph_quantity = ft_atoi(argv[1]);
 	p.mutex->hashi = malloc(sizeof(pthread_mutex_t) * rules->ph_quantity);
 	if (!p.mutex->hashi)
-		error_free(p.mutex);
+	{
+		free_mutex(p.mutex);
+		return (print_init_error(ERR_MALLOC));
+	}
 	init_rules(rules, 2, argv);
 	p.hashi_index = 0;
 	while (p.hashi_index < rules->ph_quantity)
@@ -108,13 +94,9 @@ void	init_philo(t_rules *rules, char **argv, t_node **nodes)
 		append_item(nodes, p.philosopher_index, rules, p.mutex);
 		p.philosopher_index++;
 	}
+	return (1);
 }
 
-/*
-** Assigns left/right fork pointers to each node and spawns its thread.
-** The last philosopher's right fork wraps back to the first philosopher's
-** left fork, closing the circle.
-*/
 static void	assign_forks_and_spawn(t_node *node, t_node *begin_list,
 								pthread_mutex_t *hashi, int index_mutex)
 {

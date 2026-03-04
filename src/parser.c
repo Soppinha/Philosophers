@@ -3,23 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wedos-sa <wedos-sa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sofia <sofia@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 11:03:10 by wedos-sa          #+#    #+#             */
-/*   Updated: 2025/12/19 14:20:57 by wedos-sa         ###   ########.fr       */
+/*   Updated: 2026/03/04 16:23:39 by sofia            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philosophers.h"
+#include "philo.h"
 
-static void	err(const char *msg)
-{
-	while (*msg)
-		write(2, msg++, 1);
-	exit(EXIT_FAILURE);
-}
-
-static int	ft_strlen_local(const char *s)
+static int	ft_strlen(const char *s)
 {
 	int	i;
 
@@ -29,15 +22,12 @@ static int	ft_strlen_local(const char *s)
 	return (i);
 }
 
-/*
-** Returns 1 if the numeric string exceeds INT_MAX (2147483647).
-*/
 static int	is_overflow(const char *s)
 {
 	const char	*max = "2147483647";
 	int			len;
 
-	len = ft_strlen_local(s);
+	len = ft_strlen(s);
 	if (len > 10)
 		return (1);
 	if (len < 10)
@@ -54,10 +44,6 @@ static int	is_overflow(const char *s)
 	return (0);
 }
 
-/*
-** Rejects empty strings and any argument that contains a non-digit character.
-** This catches '-', '+', letters and any other symbol including '-5'.
-*/
 int	valid_input(char **argv)
 {
 	int	i;
@@ -67,35 +53,30 @@ int	valid_input(char **argv)
 	while (argv[i])
 	{
 		if (argv[i][0] == '\0')
-			err("ERROR: Empty argument.\n");
+			return (print_input_error(ERR_EMPTY));
 		j = 0;
 		while (argv[i][j])
 		{
 			if (argv[i][j] < '0' || argv[i][j] > '9')
-				err("ERROR: Only digits are accepted.\n");
+				return (print_input_error(ERR_DIGIT));
 			j++;
 		}
 		if (is_overflow(argv[i]))
-			err("ERROR: Value out of range.\n");
+			return (print_input_error(ERR_OVERFLOW));
 		i++;
 	}
 	return (1);
 }
 
-void	print_error(char **argv)
-{
-	if (ft_atoi(argv[1]) < 1)
-		err("ERROR: Minimum 1 philosopher.\n");
-	err("ERROR: Try: ./philo 5 800 200 200\n");
-}
-
-void	init_check(int argc, char **argv)
+int	init_check(int argc, char **argv)
 {
 	if (argc < 5 || argc > 6)
-		err("ERROR: Philosophers need 4 or 5 arguments.\n");
-	valid_input(argv);
+		return (print_input_error(ERR_ARGS));
+	if (!valid_input(argv))
+		return (0);
 	if (ft_atoi(argv[1]) < 1)
-		print_error(argv);
+		return (print_input_error(ERR_NUM_PHILO));
 	if (argc == 6 && ft_atoi(argv[5]) < 1)
-		err("ERROR: Minimum 1 meal.\n");
+		return (print_input_error(ERR_MEALS));
+	return (1);
 }
