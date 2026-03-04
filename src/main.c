@@ -3,52 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sopinha <sopinha@student.42.fr>            +#+  +:+       +#+        */
+/*   By: sofia <sofia@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/19 11:02:57 by wedos-sa          #+#    #+#             */
-/*   Updated: 2026/03/04 00:07:40 by sopinha          ###   ########.fr       */
+/*   Created: 2026/03/04 18:09:31 by sofia             #+#    #+#             */
+/*   Updated: 2026/03/04 20:04:40 by sofia            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-long	get_time(void)
+void	join_all_threads(t_philo **nodes)
 {
-	struct timeval	time;
-
-	gettimeofday(&time, NULL);
-	return (time.tv_sec * 1000 + time.tv_usec / 1000);
-}
-
-void	p_sleep(t_node *ptr, int flag)
-{
-	long	start;
-
-	start = get_time();
-	if (flag == 1)
-	{
-		while (get_time() - start < ptr->rules->time_to_eat)
-		{
-			if (is_dead(ptr))
-				break ;
-			usleep(500);
-		}
-	}
-	else if (flag == 2)
-	{
-		while (get_time() - start < ptr->rules->time_to_sleep)
-		{
-			if (is_dead(ptr))
-				break ;
-			usleep(500);
-		}
-	}
-}
-
-void	join_all_threads(t_node **nodes)
-{
-	t_node	*start;
-	t_node	*curr;
+	t_philo	*start;
+	t_philo	*curr;
 
 	start = (*nodes);
 	curr = (*nodes);
@@ -63,7 +30,7 @@ void	join_all_threads(t_node **nodes)
 	}
 }
 
-void	destroy_mutexes(t_node *nodes)
+void	destroy_mutexes(t_philo *nodes)
 {
 	int	i;
 
@@ -77,20 +44,20 @@ void	destroy_mutexes(t_node *nodes)
 	i = 0;
 	while (i < nodes->rules->ph_quantity)
 	{
-		pthread_mutex_destroy(&nodes->mutex->hashi[i]);
+		pthread_mutex_destroy(&nodes->mutex->fork[i]);
 		i++;
 	}
 }
 
 int	main(int argc, char **argv)
 {
-	t_main	p;
+	t_simu	p;
 
 	if (!init_check(argc, argv))
 		return (1);
 	if (!init_philo(&p.rules, argv, &p.nodes))
 		return (1);
-	init_main(p.nodes);
+	init_simu(p.nodes);
 	init_timers(&p);
 	threads_and_mutexes(&p.nodes);
 	if (p.nodes->rules->ph_quantity == 1)

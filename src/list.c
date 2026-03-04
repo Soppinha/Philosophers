@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   list.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wedos-sa <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sofia <sofia@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/19 11:02:50 by wedos-sa          #+#    #+#             */
-/*   Updated: 2025/12/19 11:02:52 by wedos-sa         ###   ########.fr       */
+/*   Created: 2026/03/04 18:09:21 by sofia             #+#    #+#             */
+/*   Updated: 2026/03/04 20:01:23 by sofia            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
- #include "philo.h"
+#include "philo.h"
 
-t_node	*create_elem(int philosopher_number, t_rules *rules, t_mutex *mutex)
+t_philo	*create_elem(int philosopher_number, t_config *rules, t_locks *mutex)
 {
-	t_node	*ptr;
+	t_philo	*ptr;
 
-	ptr = malloc(sizeof(t_node));
+	ptr = malloc(sizeof(t_philo));
 	if (!ptr)
 		return (NULL);
 	ptr->number = philosopher_number;
@@ -27,9 +27,9 @@ t_node	*create_elem(int philosopher_number, t_rules *rules, t_mutex *mutex)
 	return (ptr);
 }
 
-int	list_size(t_node *begin_list)
+int	list_size(t_philo *begin_list)
 {
-	t_node	*index;
+	t_philo	*index;
 	int		i;
 
 	index = begin_list;
@@ -42,9 +42,9 @@ int	list_size(t_node *begin_list)
 	return (i);
 }
 
-t_node	*list_last(t_node *head)
+t_philo	*list_last(t_philo *head)
 {
-	t_node	*node;
+	t_philo	*node;
 
 	if (!head)
 		return (NULL);
@@ -54,10 +54,10 @@ t_node	*list_last(t_node *head)
 	return (node);
 }
 
-void	append_item(t_node **ptr, int ph_nb, t_rules *rules, t_mutex *mutex)
+void	append_item(t_philo **ptr, int ph_nb, t_config *rules, t_locks *mutex)
 {
-	t_node	*last;
-	t_node	*item;
+	t_philo	*last;
+	t_philo	*item;
 
 	if (!ptr)
 		return ;

@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sofia <sofia@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/19 11:03:10 by wedos-sa          #+#    #+#             */
-/*   Updated: 2026/03/04 17:14:49 by sofia            ###   ########.fr       */
+/*   Created: 2026/03/04 18:09:51 by sofia             #+#    #+#             */
+/*   Updated: 2026/03/04 18:21:34 by sofia            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,19 +29,19 @@ static int	is_overflow(const char *s)
 
 	len = ft_strlen(s);
 	if (len > 10)
-		return (1);
+		return (TRUE);
 	if (len < 10)
-		return (0);
+		return (FALSE);
 	while (*s)
 	{
 		if (*s > *max)
-			return (1);
+			return (TRUE);
 		if (*s < *max)
-			return (0);
+			return (FALSE);
 		s++;
 		max++;
 	}
-	return (0);
+	return (FALSE);
 }
 
 int	valid_input(char **argv)
@@ -65,7 +65,7 @@ int	valid_input(char **argv)
 			return (print_input_error(ERR_OVERFLOW));
 		i++;
 	}
-	return (1);
+	return (TRUE);
 }
 
 int	init_check(int argc, char **argv)
@@ -73,10 +73,10 @@ int	init_check(int argc, char **argv)
 	if (argc < 5 || argc > 6)
 		return (print_input_error(ERR_ARGS));
 	if (!valid_input(argv))
-		return (0);
+		return (FALSE);
 	if (ft_atoi(argv[1]) < 1)
 		return (print_input_error(ERR_NUM_PHILO));
 	if (argc == 6 && ft_atoi(argv[5]) < 1)
 		return (print_input_error(ERR_MEALS));
-	return (1);
+	return (TRUE);
 }

@@ -6,13 +6,13 @@
 /*   By: sofia <sofia@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/04 16:51:14 by sofia             #+#    #+#             */
-/*   Updated: 2026/03/04 17:14:06 by sofia            ###   ########.fr       */
+/*   Updated: 2026/03/04 20:04:33 by sofia            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	init_main(t_node *nodes)
+void	init_simu(t_philo *nodes)
 {
 	pthread_mutex_init(&nodes->mutex->meal_lock, NULL);
 	pthread_mutex_init(&nodes->mutex->max_meal_lock, NULL);
@@ -21,7 +21,7 @@ void	init_main(t_node *nodes)
 	pthread_mutex_init(&nodes->mutex->dead, NULL);
 }
 
-void	init_timers(t_main *p)
+void	init_timers(t_simu *p)
 {
 	p->start = get_time();
 	p->nodes->rules->start_time = p->start;
@@ -39,7 +39,7 @@ void	init_timers(t_main *p)
 	}
 }
 
-static void	init_rules(t_rules *rules, int flag, char **argv)
+static void	init_config(t_config *rules, int flag, char **argv)
 {
 	if (flag == 1)
 	{
@@ -59,78 +59,42 @@ static void	init_rules(t_rules *rules, int flag, char **argv)
 	}
 }
 
-static void	free_mutex(t_mutex *mutex)
+static int	init_forks(t_config *rules, t_init *p)
 {
-	free(mutex);
+	p->mutex->fork = malloc(sizeof(pthread_mutex_t) * rules->ph_quantity);
+	if (!p->mutex->fork)
+	{
+		free(p->mutex);
+		return (print_init_error(ERR_MALLOC));
+	}
+	p->fork_index = 0;
+	while (p->fork_index < rules->ph_quantity)
+	{
+		pthread_mutex_init(&p->mutex->fork[p->fork_index], NULL);
+		p->fork_index++;
+	}
+	return (TRUE);
 }
 
-int	init_philo(t_rules *rules, char **argv, t_node **nodes)
+int	init_philo(t_config *rules, char **argv, t_philo **nodes)
 {
-	t_p	p;
+	t_init	p;
 
-	init_rules(rules, 1, argv);
-	p.mutex = malloc(sizeof(t_mutex));
+	init_config(rules, 1, argv);
+	p.mutex = malloc(sizeof(t_locks));
 	if (!p.mutex)
 		return (print_init_error(ERR_MALLOC));
 	rules->ph_quantity = ft_atoi(argv[1]);
-	p.mutex->hashi = malloc(sizeof(pthread_mutex_t) * rules->ph_quantity);
-	if (!p.mutex->hashi)
+	if (!init_forks(rules, &p))
+		return (FALSE);
+	init_config(rules, 2, argv);
+	p.philo_index = 1;
+	(*nodes) = create_elem(p.philo_index, rules, p.mutex);
+	p.philo_index++;
+	while (p.philo_index <= rules->ph_quantity)
 	{
-		free_mutex(p.mutex);
-		return (print_init_error(ERR_MALLOC));
+		append_item(nodes, p.philo_index, rules, p.mutex);
+		p.philo_index++;
 	}
-	init_rules(rules, 2, argv);
-	p.hashi_index = 0;
-	while (p.hashi_index < rules->ph_quantity)
-	{
-		pthread_mutex_init(&p.mutex->hashi[p.hashi_index], NULL);
-		p.hashi_index++;
-	}
-	p.philosopher_index = 1;
-	(*nodes) = create_elem(p.philosopher_index, rules, p.mutex);
-	p.philosopher_index++;
-	while (p.philosopher_index <= rules->ph_quantity)
-	{
-		append_item(nodes, p.philosopher_index, rules, p.mutex);
-		p.philosopher_index++;
-	}
-	return (1);
-	return (1);
-}
-
-static void	assign_forks_and_spawn(t_node *node, t_node *begin_list,
-								pthread_mutex_t *hashi, int index_mutex)
-{
-	if (node->next == begin_list)
-	{
-		node->left = &hashi[index_mutex];
-		node->right = begin_list->left;
-	}
-	else
-	{
-		node->left = &hashi[index_mutex];
-		node->right = &hashi[index_mutex + 1];
-	}
-	pthread_create(&node->thread_id, NULL, routine, node);
-}
-
-void	threads_and_mutexes(t_node **nodes)
-{
-	t_node			*node;
-	t_node			*begin_list;
-	int				index_mutex;
-	pthread_mutex_t	*hashi;
-
-	begin_list = (*nodes);
-	index_mutex = 0;
-	node = *nodes;
-	hashi = node->mutex->hashi;
-	while (node)
-	{
-		assign_forks_and_spawn(node, begin_list, hashi, index_mutex);
-		node = node->next;
-		if (node == begin_list)
-			break ;
-		index_mutex++;
-	}
+	return (TRUE);
 }

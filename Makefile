@@ -6,7 +6,7 @@
 #    By: sofia <sofia@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/03/04 16:50:45 by sofia             #+#    #+#              #
-#    Updated: 2026/03/04 17:08:19 by sofia            ###   ########.fr        #
+#    Updated: 2026/03/04 18:05:21 by sofia            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,6 +29,10 @@ SRCS		= $(SRC_DIR)/main.c			\
 			  $(SRC_DIR)/monitor.c		\
 			  $(SRC_DIR)/log.c			\
 			  $(SRC_DIR)/one_philo.c	\
+			  $(SRC_DIR)/thread.c		\
+			  $(SRC_DIR)/action.c		\
+			  $(SRC_DIR)/time.c			\
+			  $(SRC_DIR)/memory.c		\
 			  $(SRC_DIR)/utils.c
 
 OBJS		= $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS))

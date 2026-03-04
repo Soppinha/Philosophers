@@ -1,34 +1,46 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   one_philo.c                                        :+:      :+:    :+:   */
+/*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sofia <sofia@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/04 16:38:57 by sofia             #+#    #+#             */
+/*   Created: 2026/03/04 17:01:16 by sofia             #+#    #+#             */
 /*   Updated: 2026/03/04 20:01:23 by sofia            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	one_philosopher(t_philo *node)
+long	get_time(void)
 {
-	pthread_mutex_lock(node->left);
-	pthread_mutex_lock(&node->mutex->write_lock);
-	if (!node->rules->dead)
+	struct timeval	time;
+
+	gettimeofday(&time, NULL);
+	return (time.tv_sec * 1000 + time.tv_usec / 1000);
+}
+
+void	p_sleep(t_philo *ptr, int flag)
+{
+	long	start;
+
+	start = get_time();
+	if (flag == 1)
 	{
-		printf(" %lu |🍴 philosopher 1 has taken a fork\n",
-			get_time() - node->rules->real_time);
+		while (get_time() - start < ptr->rules->time_to_eat)
+		{
+			if (is_dead(ptr))
+				break ;
+			usleep(500);
+		}
 	}
-	pthread_mutex_unlock(&node->mutex->write_lock);
-	usleep(node->rules->time_to_die * 1000);
-	pthread_mutex_lock(&node->mutex->write_lock);
-	if (!node->rules->dead)
+	else if (flag == 2)
 	{
-		printf(" %lu | philosopher 1 died 👻\n",
-			get_time() - node->rules->real_time);
+		while (get_time() - start < ptr->rules->time_to_sleep)
+		{
+			if (is_dead(ptr))
+				break ;
+			usleep(500);
+		}
 	}
-	pthread_mutex_unlock(&node->mutex->write_lock);
-	pthread_mutex_unlock(node->left);
 }

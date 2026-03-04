@@ -5,40 +5,38 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sofia <sofia@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/19 11:03:04 by wedos-sa          #+#    #+#             */
-/*   Updated: 2026/03/04 16:48:59 by sofia            ###   ########.fr       */
+/*   Created: 2026/03/04 18:09:42 by sofia             #+#    #+#             */
+/*   Updated: 2026/03/04 20:29:44 by sofia            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	philo_eat_print(t_node *ptr, t_node *temp)
+void	philo_eat_print(t_philo *ptr, t_philo *temp)
 {
 	int	i;
 
 	i = 0;
 	pthread_mutex_lock(&ptr->mutex->write_lock);
-	printf(" %lu | ✅ all philosophers have eaten\n",
-		get_time() - ptr->rules->real_time);
-	printf("|==================================================|\n");
+	printf("\n");
+	printf("⭐⭐⭐	all philosophers have eaten ⭐⭐⭐\n");
+	printf("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
 	temp = ptr;
 	while (i < ptr->rules->ph_quantity)
 	{
-		printf(" ✅ philosopher %d eat [%d]x\n", temp->number, temp->meals);
+		printf(" 🧓 philosopher %d 🍔 %dx\n", temp->number, temp->meals);
 		temp = temp->next;
 		i++;
 	}
-	printf("|==================================================|\n");
+	printf("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
 	pthread_mutex_unlock(&ptr->mutex->write_lock);
 }
 
-void	eat_monitor(t_node *ptr)
+void	eat_monitor(t_philo *begin_list)
 {
-	t_node	*begin_list;
-	t_node	*temp;
+	t_philo	*temp;
 
-	begin_list = ptr;
-	temp = ptr;
+	temp = begin_list;
 	while (temp)
 	{
 		pthread_mutex_lock(&temp->mutex->meal_lock);
@@ -52,35 +50,48 @@ void	eat_monitor(t_node *ptr)
 		if (temp == begin_list)
 			break ;
 	}
-	philo_eat_print(ptr, temp);
-	pthread_mutex_lock(&ptr->mutex->dead);
-	ptr->rules->dead = 1;
-	pthread_mutex_unlock(&ptr->mutex->dead);
+	philo_eat_print(begin_list, temp);
+	pthread_mutex_lock(&begin_list->mutex->dead);
+	begin_list->rules->dead = 1;
+	pthread_mutex_unlock(&begin_list->mutex->dead);
 }
 
-void	*monitor_looping(t_node *ptr, t_node *begin_list)
+static int	check_death(t_philo *ptr)
 {
-	while (ptr && ptr->next != begin_list)
+	pthread_mutex_lock(&ptr->mutex->meal_lock);
+	if (get_time() - ptr->last_meal > ptr->rules->time_to_die)
 	{
-		if (ptr->rules->max_meals > 0)
-		{
-			pthread_mutex_lock(&ptr->mutex->max_meal_lock);
-			eat_monitor(ptr);
-			pthread_mutex_unlock(&ptr->mutex->max_meal_lock);
-			if (is_dead(ptr))
-				return (NULL);
-		}
-		pthread_mutex_lock(&ptr->mutex->meal_lock);
-		if (get_time() - ptr->last_meal > ptr->rules->time_to_die)
-		{
-			pthread_mutex_unlock(&ptr->mutex->meal_lock);
-			print_dead(ptr);
-			pthread_mutex_lock(&ptr->mutex->dead);
-			ptr->rules->dead = 1;
-			pthread_mutex_unlock(&ptr->mutex->dead);
-			return (NULL);
-		}
+		pthread_mutex_lock(&ptr->mutex->dead);
+		ptr->rules->dead = 1;
+		pthread_mutex_unlock(&ptr->mutex->dead);
 		pthread_mutex_unlock(&ptr->mutex->meal_lock);
+		pthread_mutex_lock(&ptr->mutex->write_lock);
+		print_dead(ptr);
+		pthread_mutex_unlock(&ptr->mutex->write_lock);
+		return (TRUE);
+	}
+	pthread_mutex_unlock(&ptr->mutex->meal_lock);
+	return (FALSE);
+}
+
+void	*monitor_looping(t_philo *ptr, t_philo *begin_list)
+{
+	int	first;
+
+	if (ptr->rules->max_meals > 0)
+	{
+		pthread_mutex_lock(&ptr->mutex->max_meal_lock);
+		eat_monitor(begin_list);
+		pthread_mutex_unlock(&ptr->mutex->max_meal_lock);
+		if (is_dead(ptr))
+			return (NULL);
+	}
+	first = 1;
+	while (ptr && (first || ptr != begin_list))
+	{
+		first = 0;
+		if (check_death(ptr))
+			return (NULL);
 		ptr = ptr->next;
 	}
 	return ((void *)1);
@@ -88,10 +99,10 @@ void	*monitor_looping(t_node *ptr, t_node *begin_list)
 
 void	*monitor(void *head)
 {
-	t_node	*ptr;
-	t_node	*begin_list;
+	t_philo	*ptr;
+	t_philo	*begin_list;
 
-	ptr = (t_node *)head;
+	ptr = (t_philo *)head;
 	begin_list = ptr;
 	pthread_mutex_lock(&ptr->mutex->dead);
 	ptr->rules->dead = 0;
@@ -101,7 +112,7 @@ void	*monitor(void *head)
 		ptr = begin_list;
 		if (monitor_looping(ptr, begin_list) == NULL)
 			return (NULL);
-		usleep(1000);
+		usleep(500);
 	}
 	return (NULL);
 }

@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sofia <sofia@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/19 11:03:43 by wedos-sa          #+#    #+#             */
-/*   Updated: 2026/03/04 17:00:54 by sofia            ###   ########.fr       */
+/*   Created: 2026/03/04 18:10:12 by sofia             #+#    #+#             */
+/*   Updated: 2026/03/04 20:01:23 by sofia            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	ft_atoi(const char *string)
 	return (nb * sign);
 }
 
-int	is_dead(t_node *ptr)
+int	is_dead(t_philo *ptr)
 {
 	int	dead;
 
@@ -48,7 +48,7 @@ int	is_dead(t_node *ptr)
 	return (dead);
 }
 
-void	wait_start(t_node *node)
+void	wait_start(t_philo *node)
 {
 	while (1)
 	{
@@ -56,31 +56,4 @@ void	wait_start(t_node *node)
 			break ;
 		usleep(50);
 	}
-}
-
-void	free_list(t_node **begin_list)
-{
-	t_free	p;
-
-	if (!begin_list || !*begin_list)
-		return ;
-	p.start = *begin_list;
-	p.total_nodes = p.start->rules->ph_quantity;
-	p.current = p.start->next;
-	if (p.start->mutex)
-	{
-		if (p.start->mutex->hashi)
-			free(p.start->mutex->hashi);
-		free(p.start->mutex);
-	}
-	free(p.start);
-	p.i = 1;
-	while (p.i < p.total_nodes && p.current)
-	{
-		p.to_free = p.current;
-		p.current = p.current->next;
-		free(p.to_free);
-		p.i++;
-	}
-	*begin_list = NULL;
 }
