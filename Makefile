@@ -3,88 +3,60 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: sopinha <sopinha@student.42.fr>            +#+  +:+       +#+         #
+#    By: wedos-sa <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2026/02/07 18:00:00 by sopinha           #+#    #+#              #
-#    Updated: 2026/03/03 19:55:08 by sopinha          ###   ########.fr        #
+#    Created: 2025/12/02 15:50:50 by wedos-sa          #+#    #+#              #
+#    Updated: 2025/12/19 11:46:56 by wedos-sa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME		=	philo
+NAME		= philo
 
-CC			=	cc
-CFLAGS		=	-Wall -Wextra -Werror -pthread -I include
-RM			=	rm -rf
+CC			= cc
+CFLAGS		= -g -Wall -Wextra -Werror
+LDFLAGS		= -lpthread
 
-GREEN		=	\033[0;32m
-RED			=	\033[0;31m
-YELLOW		=	\033[0;33m
-RESET		=	\033[0m
+SRCS		= main.c		\
+			  parser.c		\
+			  init.c		\
+			  list.c		\
+			  routine.c		\
+			  forks.c		\
+			  monitor.c		\
+			  utils.c
 
-SRC_DIR		=	src
-OBJ_DIR		=	obj
-FUNC_DIR	=	$(SRC_DIR)/func_aux
+OBJS		= $(SRCS:.c=.o)
 
-HEADER		=	include/philo.h
+# ************************* COLORS & SILENCE ************************* #
 
-SRCS		=	main.c \
-				$(SRC_DIR)/input.c \
-				$(SRC_DIR)/validate.c \
-				$(SRC_DIR)/init.c \
-				$(SRC_DIR)/cleanup.c \
-				$(SRC_DIR)/error.c \
-				$(SRC_DIR)/simulation.c \
-				$(SRC_DIR)/action.c \
-				$(SRC_DIR)/one_philo.c \
-				$(SRC_DIR)/routine.c \
-				$(SRC_DIR)/monitor.c \
-				$(SRC_DIR)/log.c \
-				$(SRC_DIR)/utils.c \
-				$(SRC_DIR)/utils_time.c \
-				$(FUNC_DIR)/ft_isdigit.c \
-				$(FUNC_DIR)/ft_isspace.c \
-				$(FUNC_DIR)/ft_putstr_fd.c \
-				$(FUNC_DIR)/ft_strlen.c \
-				$(FUNC_DIR)/ft_unsigned_atol.c
+RESET		= \033[0m
+GREEN		= \033[1;32m
+YELLOW		= \033[1;33m
+RED			= \033[1;31m
 
-OBJS		=	$(SRCS:%.c=$(OBJ_DIR)/%.o)
+SILENT		= @
+
+# ****************************** RULES ******************************* #
 
 all: $(NAME)
 
-$(OBJ_DIR)/%.o: %.c $(HEADER)
-	@mkdir -p $(dir $@)
-	@$(CC) $(CFLAGS) -c $< -o $@
-
 $(NAME): $(OBJS)
-	@$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
-	@printf "$(GREEN)━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━$(RESET)\n"
-	@printf "$(GREEN)✓ $(NAME) compiled successfully!$(RESET)\n"
-	@printf "$(GREEN)━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━$(RESET)\n"
+	$(SILENT)echo "$(GREEN)[PHILO]$(RESET) Compilado"
+	$(SILENT)$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LDFLAGS)
+
+%.o: %.c philosophers.h
+	$(SILENT)$(CC) $(CFLAGS) -c $< -o $@
+
+# ***************************** CLEANING ***************************** #
 
 clean:
-	@$(RM) $(OBJ_DIR)
-	@printf "$(RED)✗ Object files removed$(RESET)\n"
+	$(SILENT)echo "$(RED)[CLEAN]$(RESET) Removidos: objetos do projeto"
+	$(SILENT)rm -f $(OBJS)
 
 fclean: clean
-	@$(RM) $(NAME)
-	@printf "$(RED)✗ $(NAME) removed$(RESET)\n"
+	$(SILENT)echo "$(RED)[FCLEAN]$(RESET) Removidos: objetos e binário"
+	$(SILENT)rm -f $(NAME)
 
 re: fclean all
 
-drd: $(NAME)
-	@printf "$(YELLOW)Running DRD (thread error detector)...$(RESET)\n"
-	valgrind --tool=drd --log-file=drd.log ./$(NAME) 5 800 200 200 4
-	@printf "$(GREEN)✓ Check drd.log for results$(RESET)\n"
-
-helgrind: $(NAME)
-	@printf "$(YELLOW)Running Helgrind (thread error detector)...$(RESET)\n"
-	valgrind --tool=helgrind --log-file=helgrind.log ./$(NAME) 5 800 200 200 4
-	@printf "$(GREEN)✓ Check helgrind.log for results$(RESET)\n"
-
-valgrind: $(NAME)
-	@printf "$(YELLOW)Running Valgrind (memory leak detector)...$(RESET)\n"
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes \
-		--log-file=valgrind.log ./$(NAME) 5 800 200 200 7
-	@printf "$(GREEN)✓ Check valgrind.log for results$(RESET)\n"
-
-.PHONY: all clean fclean re drd helgrind valgrind
+.PHONY: all clean fclean re
