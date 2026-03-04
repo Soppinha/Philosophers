@@ -6,7 +6,7 @@
 /*   By: sofia <sofia@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/04 16:51:14 by sofia             #+#    #+#             */
-/*   Updated: 2026/03/04 17:08:31 by sofia            ###   ########.fr       */
+/*   Updated: 2026/03/04 17:14:06 by sofia            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ int	init_philo(t_rules *rules, char **argv, t_node **nodes)
 		append_item(nodes, p.philosopher_index, rules, p.mutex);
 		p.philosopher_index++;
 	}
+	return (1);
 	return (1);
 }
 

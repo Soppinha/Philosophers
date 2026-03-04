@@ -6,7 +6,7 @@
 /*   By: sofia <sofia@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 11:03:24 by wedos-sa          #+#    #+#             */
-/*   Updated: 2026/03/04 17:02:46 by sofia            ###   ########.fr       */
+/*   Updated: 2026/03/04 17:14:23 by sofia            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,10 +114,12 @@ void	destroy_mutexes(t_node *nodes);
 /* ─── parser.c ───────────────────────────────────────────────────────────── */
 
 int		init_check(int argc, char **argv);
+int		init_check(int argc, char **argv);
 int		valid_input(char **argv);
 
 /* ─── init.c ─────────────────────────────────────────────────────────────── */
 
+int		init_philo(t_rules *rules, char **argv, t_node **nodes);
 int		init_philo(t_rules *rules, char **argv, t_node **nodes);
 void	init_main(t_node *nodes);
 void	init_timers(t_main *p);
