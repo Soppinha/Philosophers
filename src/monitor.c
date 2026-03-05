@@ -6,7 +6,7 @@
 /*   By: sofia <sofia@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/04 18:09:42 by sofia             #+#    #+#             */
-/*   Updated: 2026/03/04 20:29:44 by sofia            ###   ########.fr       */
+/*   Updated: 2026/03/04 20:55:57 by sofia            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,11 @@ void	philo_eat_print(t_philo *ptr, t_philo *temp)
 void	eat_monitor(t_philo *begin_list)
 {
 	t_philo	*temp;
+	int		count;
 
 	temp = begin_list;
-	while (temp)
+	count = 0;
+	while (count < begin_list->rules->ph_quantity)
 	{
 		pthread_mutex_lock(&temp->mutex->meal_lock);
 		if (temp->meals < temp->rules->max_meals)
@@ -47,8 +49,7 @@ void	eat_monitor(t_philo *begin_list)
 		}
 		pthread_mutex_unlock(&temp->mutex->meal_lock);
 		temp = temp->next;
-		if (temp == begin_list)
-			break ;
+		count++;
 	}
 	philo_eat_print(begin_list, temp);
 	pthread_mutex_lock(&begin_list->mutex->dead);
@@ -76,7 +77,7 @@ static int	check_death(t_philo *ptr)
 
 void	*monitor_looping(t_philo *ptr, t_philo *begin_list)
 {
-	int	first;
+	int	count;
 
 	if (ptr->rules->max_meals > 0)
 	{
@@ -86,13 +87,13 @@ void	*monitor_looping(t_philo *ptr, t_philo *begin_list)
 		if (is_dead(ptr))
 			return (NULL);
 	}
-	first = 1;
-	while (ptr && (first || ptr != begin_list))
+	count = 0;
+	while (count < ptr->rules->ph_quantity)
 	{
-		first = 0;
 		if (check_death(ptr))
 			return (NULL);
 		ptr = ptr->next;
+		count++;
 	}
 	return ((void *)1);
 }

@@ -6,7 +6,7 @@
 /*   By: sofia <sofia@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/04 18:09:59 by sofia             #+#    #+#             */
-/*   Updated: 2026/03/04 20:01:23 by sofia            ###   ########.fr       */
+/*   Updated: 2026/03/04 20:47:30 by sofia            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,23 @@
 
 static int	do_eat_cycle(t_philo *node)
 {
-	int	has_forks;
-
-	has_forks = 0;
-	if (take_fork(node))
-		has_forks = 1;
+	if (!take_fork(node))
+		return (FALSE);
 	if (is_dead(node))
 	{
-		if (has_forks)
-			put_fork(node);
+		put_fork(node);
 		return (FALSE);
 	}
+	pthread_mutex_lock(&node->mutex->write_lock);
+	if (is_dead(node))
+	{
+		pthread_mutex_unlock(&node->mutex->write_lock);
+		put_fork(node);
+		return (FALSE);
+	}
+	print_take_fork(node);
+	print_take_fork(node);
+	pthread_mutex_unlock(&node->mutex->write_lock);
 	eating(node);
 	put_fork(node);
 	return (TRUE);

@@ -6,7 +6,7 @@
 /*   By: sofia <sofia@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/04 16:50:55 by sofia             #+#    #+#             */
-/*   Updated: 2026/03/04 20:01:23 by sofia            ###   ########.fr       */
+/*   Updated: 2026/03/04 20:47:38 by sofia            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,6 @@ int	take_right_fork(t_philo *ptr)
 		put_fork(ptr);
 		return (FALSE);
 	}
-	pthread_mutex_lock(&ptr->mutex->write_lock);
-	print_take_fork(ptr);
-	print_take_fork(ptr);
-	pthread_mutex_unlock(&ptr->mutex->write_lock);
 	return (TRUE);
 }
 
@@ -61,9 +57,5 @@ int	take_left_fork(t_philo *ptr)
 		put_fork(ptr);
 		return (FALSE);
 	}
-	pthread_mutex_lock(&ptr->mutex->write_lock);
-	print_take_fork(ptr);
-	print_take_fork(ptr);
-	pthread_mutex_unlock(&ptr->mutex->write_lock);
 	return (TRUE);
 }
