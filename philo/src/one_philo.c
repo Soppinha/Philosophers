@@ -18,7 +18,7 @@ void	one_philosopher(t_philo *node)
 	pthread_mutex_lock(&node->mutex->write_lock);
 	if (!node->rules->dead)
 	{
-		printf(" %lu 🔹 🍴 philosopher 1 has taken a fork\n",
+		printf("%ld 1 has taken a fork\n",
 			get_time() - node->rules->real_time);
 	}
 	pthread_mutex_unlock(&node->mutex->write_lock);
@@ -26,7 +26,7 @@ void	one_philosopher(t_philo *node)
 	pthread_mutex_lock(&node->mutex->write_lock);
 	if (!node->rules->dead)
 	{
-		printf("\033[31m %lu 🔹 ❌ philosopher 1 died ❌\033[0m\n",
+		printf("%ld 1 died\n",
 			get_time() - node->rules->real_time);
 	}
 	pthread_mutex_unlock(&node->mutex->write_lock);

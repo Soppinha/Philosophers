@@ -161,7 +161,6 @@ void	print_dead(t_philo *ptr);
 void	*monitor(void *head);
 void	*monitor_looping(t_philo *ptr, t_philo *begin_list);
 void	eat_monitor(t_philo *begin_list);
-void	philo_eat_print(t_philo *ptr, t_philo *temp);
 
 /* ─── utils.c ────────────────────────────────────────────────────────────── */
 

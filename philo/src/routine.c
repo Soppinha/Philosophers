@@ -62,6 +62,8 @@ void	*routine(void *ptr)
 		return (NULL);
 	}
 	wait_start(node);
+	if (node->number % 2 == 0)
+		usleep(node->rules->time_to_eat * 500);
 	routine_while(ptr);
 	return (NULL);
 }

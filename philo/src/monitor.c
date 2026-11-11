@@ -12,26 +12,6 @@
 
 #include "philo.h"
 
-void	philo_eat_print(t_philo *ptr, t_philo *temp)
-{
-	int	i;
-
-	i = 0;
-	pthread_mutex_lock(&ptr->mutex->write_lock);
-	printf("\n");
-	printf("⭐⭐⭐	all philosophers have eaten ⭐⭐⭐\n");
-	printf("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
-	temp = ptr;
-	while (i < ptr->rules->ph_quantity)
-	{
-		printf(" 🧓 philosopher %d 🍔 %dx\n", temp->number, temp->meals);
-		temp = temp->next;
-		i++;
-	}
-	printf("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
-	pthread_mutex_unlock(&ptr->mutex->write_lock);
-}
-
 void	eat_monitor(t_philo *begin_list)
 {
 	t_philo	*temp;
@@ -51,7 +31,6 @@ void	eat_monitor(t_philo *begin_list)
 		temp = temp->next;
 		count++;
 	}
-	philo_eat_print(begin_list, temp);
 	pthread_mutex_lock(&begin_list->mutex->dead);
 	begin_list->rules->dead = 1;
 	pthread_mutex_unlock(&begin_list->mutex->dead);
