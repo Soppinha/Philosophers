@@ -37,9 +37,19 @@ INC_DIR		=	include
 INCLUDES	=	-I$(INC_DIR)
 HEADERS		=	$(INC_DIR)/philo.h
 
-SRC_FILES	=	main.c error.c parser.c init.c list.c routine.c forks.c \
-				monitor.c log.c one_philo.c thread.c action.c time.c \
-				memory.c utils.c
+PARSING		=	parser.c error.c
+
+SETUP		=	init.c list.c thread.c
+
+SIMULATION	=	routine.c forks.c action.c monitor.c one_philo.c
+
+UTILS		=	log.c time.c memory.c utils.c
+
+SRC_FILES	=	main.c \
+				$(addprefix parsing/, $(PARSING)) \
+				$(addprefix setup/, $(SETUP)) \
+				$(addprefix simulation/, $(SIMULATION)) \
+				$(addprefix utils/, $(UTILS))
 
 OBJS		=	$(addprefix $(OBJ_DIR)/, $(SRC_FILES:.c=.o))
 
@@ -50,7 +60,7 @@ $(NAME):	$(OBJS)
 	@$(LOG) "$(C_DONE)" linked "$(NAME)"
 
 $(OBJ_DIR)/%.o:	$(SRC_DIR)/%.c $(HEADERS)
-	@mkdir -p $(OBJ_DIR)
+	@mkdir -p $(dir $@)
 	@$(LOG) "$(C_BUILD)" compiling "$<"
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 

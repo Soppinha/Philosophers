@@ -30,22 +30,26 @@ The goal is a simulation with no data races, no deadlocks, and a death reported 
 philo/
 ├── include/philo.h
 ├── src/
-│   ├── main.c          # setup, start of threads, join and cleanup
-│   ├── parser.c        # argument validation
-│   ├── init.c          # rules, forks and philosophers
-│   ├── list.c          # circular doubly linked list
-│   ├── thread.c        # fork assignment and thread creation
-│   ├── routine.c       # philosopher loop: eat, sleep, think
-│   ├── forks.c         # taking and releasing forks
-│   ├── action.c        # eating, sleeping, thinking
-│   ├── monitor.c       # death and meal checks
-│   ├── one_philo.c     # single-philosopher case
-│   ├── log.c           # state messages
-│   ├── time.c          # time in ms and precise sleep
-│   ├── error.c         # error messages
-│   ├── memory.c        # cleanup
-│   └── utils.c         # atoi, stop flag, start barrier
-└── Makefile            # objects are built in obj/
+│   ├── main.c              # setup, start of threads, join and cleanup
+│   ├── parsing/
+│   │   ├── parser.c        # argument validation
+│   │   └── error.c         # error messages
+│   ├── setup/
+│   │   ├── init.c          # rules, forks and philosophers
+│   │   ├── list.c          # circular doubly linked list
+│   │   └── thread.c        # fork assignment and thread creation
+│   ├── simulation/
+│   │   ├── routine.c       # philosopher loop: eat, sleep, think
+│   │   ├── forks.c         # taking and releasing forks
+│   │   ├── action.c        # eating, sleeping, thinking
+│   │   ├── monitor.c       # death and meal checks
+│   │   └── one_philo.c     # single-philosopher case
+│   └── utils/
+│       ├── log.c           # state messages
+│       ├── time.c          # time in ms and precise sleep
+│       ├── memory.c        # cleanup
+│       └── utils.c         # atoi, stop flag, start barrier
+└── Makefile                # objects are built in obj/
 ```
 
 ## Instructions
